@@ -14,7 +14,7 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
     useEffect(() => {
         const timer = setTimeout(() => {
             setPopupVisible(false);
-        }, 3000); // Hide the popup after 3 seconds
+        }, 5000); // Hide the popup after 3 seconds
 
         return () => clearTimeout(timer); // Cleanup the timer
     }, []);
