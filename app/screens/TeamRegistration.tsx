@@ -9,7 +9,7 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
 
 
     const handleRegisterTeams = () => {
-        navigation.navigate('PlayerRegistration', { teamName1, teamName2 });
+        navigation.navigate('MatchDetails');
     };
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -60,7 +60,8 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
 };
 
 const styles = StyleSheet.create({
-    container: {    
+    container: {   
+
         flex: 1,
         justifyContent: 'center',
         //alignItems: 'flex-start',
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
         alignSelf : 'center',
     },
     registerButton: {
-        backgroundColor: '#007bff',
+        backgroundColor: '#006aa2',
         padding: 15,
         borderRadius: 10,
         width: '90%',

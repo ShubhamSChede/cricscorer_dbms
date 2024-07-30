@@ -8,6 +8,7 @@ import PlayerRegistration from './screens/PlayerRegistration';
 import MatchDetails from './screens/MatchDetails';
 import TossResult from './screens/TossResult';
 import AppTabs from './AppTabs'; // Import the new tab navigator
+import SelectPlayer from './screens/SelectPlayer';
 
 const Stack = createStackNavigator();
 //shrey 
@@ -16,9 +17,10 @@ function AppNavigator() {
         <NavigationContainer independent={true} >
             <Stack.Navigator initialRouteName="TeamRegistration">
                 <Stack.Screen name="TeamRegistration" component={TeamRegistration} />
-                <Stack.Screen name="PlayerRegistration" component={PlayerRegistration} />
                 <Stack.Screen name="MatchDetails" component={MatchDetails} />
+                <Stack.Screen name="PlayerRegistration" component={PlayerRegistration} />
                 <Stack.Screen name="TossResult" component={TossResult} />
+                <Stack.Screen name="SelectPlayer" component={SelectPlayer} />
                 <Stack.Screen name="AppTabs" component={AppTabs} options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>

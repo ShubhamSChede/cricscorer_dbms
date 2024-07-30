@@ -187,7 +187,7 @@ const TossResult = () => {
                     <Text style={[styles.optionText, decision === 'bowl' && styles.selectedText]}>Bowl</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('AppTabs')}>
+            <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('SelectPlayer')}>
                 <Text style={styles.nextButtonText}>NEXT</Text>
             </TouchableOpacity>
 
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
-        paddingBottom : 20
+        paddingBottom : 20,
     },
     title: {
         fontSize: 32,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     nextButton: {
         marginTop: 10,
         padding: 5,
-        backgroundColor: '#007bff',
+        backgroundColor: '#006aa2',
         borderRadius: 10,
         alignItems: 'center',
         justifyContent: 'center',
