@@ -90,7 +90,7 @@ const MatchDetails = ({ navigation }: { navigation: NavigationProp<any> }) => {
                     onChange={handleDateChange}
                 />
             )}
-        <Button title="NEXT" onPress={() => navigation.navigate('PlayerRegistration', { teamName1: '', teamName2: '' })} />
+        <Button title="NEXT" onPress={() => navigation.navigate('PlayerRegistration', { teamName1: '', teamName2: '' })} color='#006aa2'/>
         </ImageBackground>
     );
 };

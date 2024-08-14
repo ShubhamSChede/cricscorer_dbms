@@ -1,38 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Image, Modal } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 import { NavigationProp } from '@react-navigation/native';
 
 const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) => {
     const [teamName1, setTeamName1] = useState('');
     const [teamName2, setTeamName2] = useState('');
-    const [isPopupVisible, setPopupVisible] = useState(true);
-
 
     const handleRegisterTeams = () => {
         navigation.navigate('MatchDetails');
     };
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setPopupVisible(false);
-        }, 5000); // Hide the popup after 3 seconds
-
-        return () => clearTimeout(timer); // Cleanup the timer
-    }, []);
+   
 
     return (
         <View style={styles.container}>
-        <Modal
-            visible={isPopupVisible}
-            transparent={true}
-            animationType='fade'
-        >
-            <View style={styles.popupContainer}>
-                <Image
-                    source={require('../../assets/images/bg8.png')} // Path to your popup image
-                    style={styles.popupImage}
-                />
-            </View>
-        </Modal>
              <ImageBackground
                 source={require('../../assets/images/bg6.jpg')}
                 style={styles.container}
@@ -61,22 +41,8 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
 
 const styles = StyleSheet.create({
     container: {   
-
         flex: 1,
         justifyContent: 'center',
-        //alignItems: 'flex-start',
-        //padding: 50,
-        //backgroundColor: '#f5f5f5',
-    },
-    popupContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
-    },
-    popupImage: {
-        width: 400,
-        height: 800,
     },
 
     title: {

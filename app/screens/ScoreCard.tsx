@@ -6,7 +6,10 @@ const totalOvers = 20; // Example total overs
 
 const ScoreCard = () => {
     return (
+        
+        
         <ScrollView contentContainerStyle={styles.container}>
+        
             <Text style={styles.title}>Scorecard</Text>
 
             <View style={styles.totalContainer}>
