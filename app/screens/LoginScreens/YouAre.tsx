@@ -4,17 +4,27 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { ImageBackground } from 'react-native';
 
-function Profile(){
+function YouAre(){
   const navigation = useNavigation();
 
   return (
           <View style={styles.container}>
-              <ImageBackground source={require('../../assets/images/mainscreen.png')} style={styles.background}>
+              <ImageBackground source={require('../../../assets/images/mainscreen.png')} style={styles.background}>
 
       <View style={styles.square}>
-        <Text style={styles.tex}>SCORER</Text>
-        <Text style={styles.tex}>NAME : PANKAJ KUMAR</Text>
-        <Text style={styles.tex}>EMAIL :  pankk123@gmail.com</Text>
+        <Text style={styles.tex}>LOG IN AS </Text>
+        <TouchableOpacity 
+          style={styles.Button} 
+          onPress={() => navigation.navigate('ScorerSignUp' as never)}
+        >
+          <Text style={styles.ButtonText}>Scorer</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.Button} 
+          onPress={() => navigation.navigate('PlayerSignUp' as never)}
+        >
+          <Text style={styles.ButtonText}>Player</Text>
+        </TouchableOpacity>
       </View>
      
       </ImageBackground>
@@ -37,9 +47,9 @@ const styles = StyleSheet.create({
       },
   square: {
     width: 300,
-    height: 200,
+    height: 300,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: 10,
     shadowColor: '#000',
@@ -50,10 +60,9 @@ const styles = StyleSheet.create({
     alignSelf : 'center',
   },
   tex: {
-    fontSize: 20,
+    fontSize: 28,
     marginBottom: 20,
     fontWeight:'bold',
-    marginLeft: 10,
   },
   Button: {
     backgroundColor: 'black',
@@ -73,4 +82,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+export default YouAre;
+

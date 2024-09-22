@@ -122,11 +122,10 @@
 // export default TossResult;
 
 // screens/TossResult.tsx
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, ImageBackground } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useEffect, useRef,  } from 'react';
 
 const TossResult = () => {
     const navigation = useNavigation();
@@ -143,124 +142,47 @@ const TossResult = () => {
     }, [fadeAnim]);
 
     return (
-        <ImageBackground
-        source={require('../../assets/images/bg5.jpg')}
-        //fill image
-        style={styles.container}
-        //image fill
+        <Animated.View style={{ opacity: fadeAnim, flex: 1, justifyContent: 'flex-start', alignItems: 'center', paddingTop: 20 }}>
+           <Text style={{ fontSize: 32, marginTop: 10, marginBottom: 20, fontWeight: 'bold', textAlign: 'center' }}>Toss Results</Text>
 
-        >
-        <Animated.View style={ { opacity: fadeAnim }}>
-          
-            <Text style={styles.title}>Toss Results</Text>
-
-            <Text style={styles.subTitle}>Who won the toss?</Text>
-            <View style={styles.optionsContainer}>
+            <Text style={{ fontSize: 22, marginVertical: 10, textAlign: 'center', fontWeight: 'bold' }}>Who won the toss?</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '80%', marginVertical: 10 }}>
                 <TouchableOpacity
-                    style={[styles.optionButton, tossWinner === 'Team1' && styles.selectedButton]}
+                    style={{ padding: 15, borderWidth: 1, borderColor: '#000', borderRadius: 20, alignItems: 'center', justifyContent: 'center', width: 100, height: 100, backgroundColor: tossWinner === 'Team1' ? '#808080' : '#fff' }}
                     onPress={() => setTossWinner('Team1')}
                 >
-                    <Text style={[styles.optionText, tossWinner === 'Team1' && styles.selectedText]}>Team 1</Text>
+                    <Text style={{ marginTop: 5, fontSize: 18, color: tossWinner === 'Team1' ? '#fff' : '#000' }}>Team 1</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.optionButton, tossWinner === 'Team2' && styles.selectedButton]}
+                    style={{ padding: 15, borderWidth: 1, borderColor: '#000', borderRadius: 20, alignItems: 'center', justifyContent: 'center', width: 100, height: 100, backgroundColor: tossWinner === 'Team2' ? '#808080' : '#fff' }}
                     onPress={() => setTossWinner('Team2')}
                 >
-                    <Text style={[styles.optionText, tossWinner === 'Team2' && styles.selectedText]}>Team 2</Text>
+                    <Text style={{ marginTop: 5, fontSize: 18, color: tossWinner === 'Team2' ? '#fff' : '#000' }}>Team 2</Text>
                 </TouchableOpacity>
             </View>
 
-            <Text style={styles.subTitle}>Decision</Text>
-            <View style={styles.optionsContainer}>
+            <Text style={{ fontSize: 22, marginVertical: 10, textAlign: 'center', fontWeight: 'bold' }}>Decision</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '80%', marginVertical: 10 }}>
                 <TouchableOpacity
-                    style={[styles.optionButton, decision === 'bat' && styles.selectedButton]}
+                    style={{ padding: 15, borderWidth: 1, borderColor: '#000', borderRadius: 20, alignItems: 'center', justifyContent: 'center', width: 100, height: 100, backgroundColor: decision === 'bat' ? '#808080' : '#fff' }}
                     onPress={() => setDecision('bat')}
                 >
                     <Icon name="cricket" size={30} color={decision === 'bat' ? '#fff' : '#000'} />
-                    <Text style={[styles.optionText, decision === 'bat' && styles.selectedText]}>Bat</Text>
+                    <Text style={{ marginTop: 5, fontSize: 18, color: decision === 'bat' ? '#fff' : '#000' }}>Bat</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.optionButton, decision === 'bowl' && styles.selectedButton]}
+                    style={{ padding: 15, borderWidth: 1, borderColor: '#000', borderRadius: 20, alignItems: 'center', justifyContent: 'center', width: 100, height: 100, backgroundColor: decision === 'bowl' ? '#808080' : '#fff' }}
                     onPress={() => setDecision('bowl')}
                 >
                     <Icon name="cricket" size={30} color={decision === 'bowl' ? '#fff' : '#000'} />
-                    <Text style={[styles.optionText, decision === 'bowl' && styles.selectedText]}>Bowl</Text>
+                    <Text style={{ marginTop: 5, fontSize: 18, color: decision === 'bowl' ? '#fff' : '#000' }}>Bowl</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.nextButton} onPress={() => navigation.navigate('SelectPlayer')}>
-                <Text style={styles.nextButtonText}>NEXT</Text>
+            <TouchableOpacity style={{ marginTop: 10, padding: 5, backgroundColor: '#006aa2', borderRadius: 10, alignItems: 'center', justifyContent: 'center', width: 300, height: 50 }} onPress={() => navigation.navigate('SelectPlayer')}>
+                <Text style={{ color: '#fff', fontSize: 18 }}>NEXT</Text>
             </TouchableOpacity>
-
         </Animated.View>
-        </ImageBackground>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        paddingBottom : 20,
-    },
-    title: {
-        fontSize: 32,
-        marginBottom: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#fff',
-        paddingBottom : 20,
-    },
-    subTitle: {
-        fontSize: 22,
-        marginVertical: 10,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#fff',
-        
-    },
-    optionsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '80%',
-        marginVertical: 10,
-    },
-    optionButton: {
-        padding: 15,
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 100,
-        height: 100,
-        backgroundColor: '#fff'
-    },
-    selectedButton: {
-        backgroundColor: '#808080'
-    },
-    optionText: {
-        marginTop: 5,
-        fontSize: 18,
-        color: '#000',
-    },
-    selectedText: {
-        color: '#fff',
-    },
-    nextButton: {
-        marginTop: 10,
-        padding: 5,
-        backgroundColor: '#006aa2',
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 300,
-        height: 50,
-    },
-    nextButtonText: {
-        color: '#fff',
-        fontSize: 18,
-    },
-});
 
 export default TossResult;

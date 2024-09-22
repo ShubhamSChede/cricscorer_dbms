@@ -27,11 +27,11 @@ const MatchDetails = ({ navigation }: { navigation: NavigationProp<any> }) => {
     };
 
     return (
-        <ImageBackground
-        source={require('../../assets/images/bg6.jpg')}
-        style={styles.container}
-        //fill image
-        >
+        <View style={styles.container}>
+            <ImageBackground
+                source={require('../../../assets/images/mainscreen.png')}
+                style={styles.background}>
+            <View style={styles.square}>
             <Text style={styles.title}>Enter Match Details</Text>
             <TextInput
                 style={styles.input}
@@ -53,7 +53,7 @@ const MatchDetails = ({ navigation }: { navigation: NavigationProp<any> }) => {
                 value={location}
                 onChangeText={setLocation}
             />
-
+    
             <View style={styles.pickerContainer}>
                 <Text style={styles.pickerLabel}>Ball Type:</Text>
                 <Picker
@@ -64,7 +64,7 @@ const MatchDetails = ({ navigation }: { navigation: NavigationProp<any> }) => {
                     <Picker.Item label="Tennis" value="tennis" />
                     <Picker.Item label="Leather" value="leather" />
                     <Picker.Item label="Other" value="other" />
-
+    
                 </Picker>
             </View>
             <View style={styles.pickerContainer}>
@@ -76,7 +76,7 @@ const MatchDetails = ({ navigation }: { navigation: NavigationProp<any> }) => {
                 >
                     <Picker.Item label="07" value="seven" />
                     <Picker.Item label="11" value="eleven" />
-
+    
                 </Picker>
             </View>
             <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
@@ -90,22 +90,37 @@ const MatchDetails = ({ navigation }: { navigation: NavigationProp<any> }) => {
                     onChange={handleDateChange}
                 />
             )}
-        <Button title="NEXT" onPress={() => navigation.navigate('PlayerRegistration', { teamName1: '', teamName2: '' })} color='#006aa2'/>
+           
+           <TouchableOpacity 
+      style={styles.nextButton} 
+      onPress={() => navigation.navigate('TeamRegistration', { teamName1: '', teamName2: '' })}
+    >
+      <Text style={styles.nextButtonText}>NEXT</Text>
+    </TouchableOpacity>
+         </View>
         </ImageBackground>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#9f9f9f',
-    },
+    background: {
+        flex : 1,
+        width: '100%',
+        resizeMode: 'contain',
+        justifyContent:'center',
+      },
+      container: {
+        flex: 1,                 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        alignContent : 'center' ,
+      },
     title: {
-        fontSize: 24,
+        fontSize: 34,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: '#fff',
+        //color: '#fff',
     },
     input: {
         height: 40,
@@ -113,7 +128,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 20,
         paddingHorizontal: 10,
-        backgroundColor: '#eee',
+        //backgroundColor: '#eee',
+        width: '92%',
+        borderRadius : 10,
+
     },
     datePickerButton: {
         height: 40,
@@ -122,15 +140,23 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 1,
         marginBottom: 20,
-        backgroundColor: '#eee',
+        //backgroundColor: '#eee',
+        width: '92%',
+        borderRadius : 10,
     },
     datePickerText: {
         color: '#000',
     },
     pickerContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginBottom: 20,
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        width: '92%',
+        borderRadius : 20,
+        color:'white',
+        
     },
     pickerLabel: {
         fontSize: 18,
@@ -140,15 +166,31 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         
     },
+    square: {
+        width: 350, 
+        height: 600, 
+        backgroundColor : 'white',
+        justifyContent: 'center',   
+        alignItems: 'center',  
+        alignSelf: 'center',
+        borderRadius: 20,   
+      },
     picker: {
         flex: 1,
          backgroundColor: '#eee',
     },
     nextButton: {
-        backgroundColor: '#006aa2',
-        padding: 15,
+        backgroundColor: 'black',
+        padding: 10,
+        paddingBottom: 10,
+        marginBottom: 5,
+        borderRadius: 10,
+        width: '95%',
+    
+        
         alignItems: 'center',
-        borderRadius: 5,
+        alignSelf: 'center',
+    
     },
     nextButtonText: {
         color: '#fff',

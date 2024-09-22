@@ -1,14 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import ScoreInput from './screens/ScoreInput';
-import ScoreCard from './screens/ScoreCard';
+import ScoreInput from '../MatchScoring/ScoreInput';
+import ScoreCard from '../ScoreCard';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
 function AppTabs() {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator screenOptions={{ headerShown: false }} >
             <Tab.Screen 
                 name="ScoreInput"  
                 component={ScoreInput}

@@ -1,407 +1,127 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet } from 'react-native';
 
-const totalScore = 160; // Example total score
-const totalOvers = 20; // Example total overs
+interface Player {
+    name: string;
+    runs: number;
+    balls: number;
+    fours: number;
+    sixes: number;
+    strikeRate: number;
+}
 
-const ScoreCard = () => {
+const players: Player[] = [
+    { name: 'Sushil', runs: 30, balls: 10, fours: 3, sixes: 1, strikeRate: 120.00 },
+    { name: 'Kunal', runs: 45, balls: 30, fours: 5, sixes: 2, strikeRate: 150.00 },
+    { name: 'Deep', runs: 30, balls: 25, fours: 3, sixes: 1, strikeRate: 120.00 },
+];
+
+const Scorecard = () => {
     return (
-        
-        
-        <ScrollView contentContainerStyle={styles.container}>
-        
-            <Text style={styles.title}>Scorecard</Text>
+        <ImageBackground
+            source={require('../../assets/images/mainscreen.png')}
+            style={styles.container}
+        >
+            <View style={styles.scorecardContainer}>
+                <Text style={styles.TITLE}> HOTSHOTS </Text>
+                <View style={styles.row}>
+                    <Text style={[styles.headerText, styles.batsmanColumn]}>Batsman</Text>
+                    <Text style={[styles.headerText, styles.runsColumn]}>R</Text>
+                    <Text style={[styles.headerText, styles.ballsColumn]}>B</Text>
+                    <Text style={[styles.headerText, styles.foursColumn]}>4s</Text>
+                    <Text style={[styles.headerText, styles.sixesColumn]}>6s</Text>
+                    <Text style={[styles.headerText, styles.srColumn]}>SR</Text>
+                </View>
 
-            <View style={styles.totalContainer}>
-                <Text style={styles.totalText}>Total Score: {totalScore}</Text>
-                <Text style={styles.totalText}>Total Overs: {totalOvers}</Text>
-            </View>
-            <Text style={styles.sectionTitle}>INNINGS 01</Text>
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Batsmen</Text>
-                <View style={styles.tableHeader}>
-                    <Text style={styles.tableHeaderText}>Name</Text>
-                    <Text style={styles.tableHeaderText}>R</Text>
-                    <Text style={styles.tableHeaderText}>B</Text>
-                    <Text style={styles.tableHeaderText}>4s</Text>
-                    <Text style={styles.tableHeaderText}>6s</Text>
-                    <Text style={styles.tableHeaderText}>SR</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 1</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 2</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 3</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 4</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 5</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 6</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 7</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 8</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 9</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 10</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 11</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                {/* Add more player rows as needed */}
-            </View>
+                {players.map((player, index) => (
+                    <View key={index} style={styles.row}>
+                        <Text style={[styles.dataText, styles.batsmanColumn]}>{player.name}</Text>
+                        <Text style={[styles.dataText, styles.runsColumn]}>{player.runs}</Text>
+                        <Text style={[styles.dataText, styles.ballsColumn]}>{player.balls}</Text>
+                        <Text style={[styles.dataText, styles.foursColumn]}>{player.fours}</Text>
+                        <Text style={[styles.dataText, styles.sixesColumn]}>{player.sixes}</Text>
+                        <Text style={[styles.dataText, styles.srColumn]}>{player.strikeRate.toFixed(2)}</Text>
+                    </View>
+                ))}
 
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Bowlers</Text>
-                <View style={styles.tableHeader}>
-                    <Text style={styles.tableHeaderText}>Name</Text>
-                    <Text style={styles.tableHeaderText}>O</Text>
-                    <Text style={styles.tableHeaderText}>M</Text>
-                    <Text style={styles.tableHeaderText}>R</Text>
-                    <Text style={styles.tableHeaderText}>W</Text>
-                    <Text style={styles.tableHeaderText}>Econ</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 1</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 2</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 3</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 4</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 5</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                {/* Add more bowler rows as needed */}
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Extras</Text>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Wides: 5</Text>
-                    <Text style={styles.tableRowText}>No Balls: 2</Text>
-                    <Text style={styles.tableRowText}>Byes: 1</Text>
-                    <Text style={styles.tableRowText}>Leg Byes: 3</Text>
+                <View style={styles.row}>
+                    <Text style={styles.footerText}>Total</Text>
+                    <Text style={styles.footerDataText}>100/2 (12.4/20)</Text>
                 </View>
             </View>
-            <View style={styles.totalContainer}>
-                <Text style={styles.totalText}>Total Score: {totalScore}</Text>
-                <Text style={styles.totalText}>Total Overs: {totalOvers}</Text>
-            </View>
-            <Text style={styles.sectionTitle}>INNINGS 02</Text>
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Batsmen</Text>
-                <View style={styles.tableHeader}>
-                    <Text style={styles.tableHeaderText}>Name</Text>
-                    <Text style={styles.tableHeaderText}>R</Text>
-                    <Text style={styles.tableHeaderText}>B</Text>
-                    <Text style={styles.tableHeaderText}>4s</Text>
-                    <Text style={styles.tableHeaderText}>6s</Text>
-                    <Text style={styles.tableHeaderText}>SR</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 1</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 2</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 3</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 4</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 5</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 6</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 7</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 8</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 9</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 10</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Player 11</Text>
-                    <Text style={styles.tableRowText}>30</Text>
-                    <Text style={styles.tableRowText}>25</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>1</Text>
-                    <Text style={styles.tableRowText}>120.0</Text>
-                </View>
-                {/* Add more player rows as needed */}
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Bowlers</Text>
-                <View style={styles.tableHeader}>
-                    <Text style={styles.tableHeaderText}>Name</Text>
-                    <Text style={styles.tableHeaderText}>O</Text>
-                    <Text style={styles.tableHeaderText}>M</Text>
-                    <Text style={styles.tableHeaderText}>R</Text>
-                    <Text style={styles.tableHeaderText}>W</Text>
-                    <Text style={styles.tableHeaderText}>Econ</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 1</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 2</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 3</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 4</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Bowler 5</Text>
-                    <Text style={styles.tableRowText}>4</Text>
-                    <Text style={styles.tableRowText}>0</Text>
-                    <Text style={styles.tableRowText}>20</Text>
-                    <Text style={styles.tableRowText}>2</Text>
-                    <Text style={styles.tableRowText}>5.0</Text>
-                </View>
-                {/* Add more bowler rows as needed */}
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Extras</Text>
-                <View style={styles.tableRow}>
-                    <Text style={styles.tableRowText}>Wides: 5</Text>
-                    <Text style={styles.tableRowText}>No Balls: 2</Text>
-                    <Text style={styles.tableRowText}>Byes: 1</Text>
-                    <Text style={styles.tableRowText}>Leg Byes: 3</Text>
-                </View>
-            </View>
-        </ScrollView>
+        </ImageBackground>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
-        backgroundColor: '#d3d3d3',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    title: {
-        fontSize: 24,
+    TITLE:{
+        fontSize:28,
+    },
+    scorecardContainer: {
+        width: '90%',
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 5,
+    },
+    headerText: {
         fontWeight: 'bold',
-        marginBottom: 20,
+        fontSize: 18,
+        color: 'black',
+    },
+    dataText: {
+        fontSize: 16,
+        color: 'black',
+    },
+    footerText: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        flex: 1,
+        color: 'black',
+    },
+    footerDataText: {
+        fontSize: 18,
+        textAlign: 'right',
+        flex: 1,
+        color: 'black',
+    },
+    batsmanColumn: {
+        flex: 2,
+    },
+    runsColumn: {
+        flex: 1,
         textAlign: 'center',
     },
-    section: {
-        marginBottom: 20,
+    ballsColumn: {
+        flex: 1,
+        textAlign: 'center',
     },
-    sectionTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 10,
+    foursColumn: {
+        flex: 1,
+        textAlign: 'center',
     },
-    tableHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        backgroundColor: '#555',
-        padding: 10,
-        borderRadius: 5,
+    sixesColumn: {
+        flex: 1,
+        textAlign: 'center',
     },
-    tableHeaderText: {
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
-   
-    tableRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        backgroundColor: '#fff',
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-    },
-    tableRowText: {
-        fontSize: 16,
-    },
-    totalText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    totalContainer: {
-        marginBottom: 20,
-        alignItems: 'center',
+    srColumn: {
+        flex: 1,
+        textAlign: 'center',
     },
 });
 
-export default ScoreCard;
+export default Scorecard;
