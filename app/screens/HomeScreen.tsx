@@ -15,7 +15,7 @@ const HomeScreen = ({ navigation }: { navigation: NavigationProp<any> }) => {
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.Button} 
-            onPress={() => navigation.navigate('LiveMatches' as never)}
+            onPress={() => navigation.navigate('LiveMatchesSpectator' as never)}
           >
             <Text style={styles.ButtonText}>I am a spectator</Text>
           </TouchableOpacity>

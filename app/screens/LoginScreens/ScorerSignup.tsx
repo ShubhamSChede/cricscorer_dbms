@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Text, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { NavigationProp } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
@@ -58,10 +58,11 @@ const ScorerSignup = ({ navigation }: { navigation: NavigationProp<any> }) => {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');   
-
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // State to manage loading
 
   const handleSignup = async () => {
+    setLoading(true); // Start the loader
     const scorerData = {
       firstname,
       lastname,
@@ -92,6 +93,8 @@ const ScorerSignup = ({ navigation }: { navigation: NavigationProp<any> }) => {
     } catch (error) {
       console.error('Error occurred during signup:', error);
       alert('An error occurred during signup. Please try again.');
+    } finally {
+      setLoading(false); // Stop the loader
     }
   };
 
@@ -133,19 +136,24 @@ const ScorerSignup = ({ navigation }: { navigation: NavigationProp<any> }) => {
             onChangeText={setPassword}
             secureTextEntry
           />
-          <TouchableOpacity onPress={handleSignup} style={styles.Button}>
-            <Text style={styles.ButtonText}>CREATE ACCOUNT</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('LoginPage')} style={styles.Button}>
-            <Text style={styles.ButtonText}>ALREADY USER ?</Text>
-          </TouchableOpacity>
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <>
+              <TouchableOpacity onPress={handleSignup} style={styles.Button}>
+                <Text style={styles.ButtonText}>CREATE ACCOUNT</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('LoginPage')} style={styles.Button}>
+                <Text style={styles.ButtonText}>ALREADY USER ?</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </ImageBackground>
     </View>
   );
 };
 
-
-
 export default ScorerSignup;
+
 

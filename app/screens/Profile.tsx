@@ -1,45 +1,72 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
-import { ImageBackground } from 'react-native';
+import { useRoute, RouteProp } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native";
+import { View, ImageBackground, Text, StyleSheet, Alert } from "react-native";
 
-function Profile(){
-  const navigation = useNavigation();
+
+type ProfileRouteProp = RouteProp<{ params: { playerDetails: { userType: string; name: string; email: string; role?: string; battingHand?: string; bowlingStyle?: string; } } }, 'params'>;
+
+const Profile: React.FC = () => {
+  const route = useRoute<ProfileRouteProp>();
+
+  const handleLogout = () => {
+    // Implement your logout logic here
+    Alert.alert('Logout', 'You have been logged out.');
+  };
+  
+  // Check if playerDetails is available
+  const { playerDetails } = route.params || {};
+  
+  if (!playerDetails) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.tex}>No player details available.</Text>
+      </View>
+    );
+  }
+
+  const { userType, name, email, role, battingHand, bowlingStyle } = playerDetails;
 
   return (
-          <View style={styles.container}>
-              <ImageBackground source={require('../../assets/images/mainscreen.png')} style={styles.background}>
+    <View style={styles.container}>
+      <ImageBackground source={require('../../assets/images/mainscreen.png')} style={styles.background}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
+        <View style={styles.square}>
+          <Text style={styles.tex}>ROLE: {userType}</Text>
+          <Text style={styles.tex}>NAME: {name}</Text>
+          <Text style={styles.tex}>EMAIL: {email}</Text>
 
-      <View style={styles.square}>
-        <Text style={styles.tex}>SCORER</Text>
-        <Text style={styles.tex}>NAME : PANKAJ KUMAR</Text>
-        <Text style={styles.tex}>EMAIL :  pankk123@gmail.com</Text>
-      </View>
-     
+          {/* Display player-specific details */}
+          {userType === 'player' && (
+            <>
+              <Text style={styles.tex}>PLAYER ROLE: {role}</Text>
+              <Text style={styles.tex}>BATTING HAND: {battingHand}</Text>
+              <Text style={styles.tex}>BOWLING STYLE: {bowlingStyle}</Text>
+            </>
+          )}
+        </View>
       </ImageBackground>
-      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-    background: {
-        flex : 1,
-        width: '100%',
-        resizeMode: 'stretch',
-        justifyContent:'center',
-      },
-      container: {
-        flex: 1,                 
-        justifyContent: 'center', 
-        alignItems: 'center',
-        alignContent : 'center' ,
-      },
+  background: {
+    flex: 1,
+    width: '100%',
+    resizeMode: 'stretch',
+    justifyContent: 'center',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
   square: {
     width: 300,
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    padding: 20,
     backgroundColor: '#fff',
     borderRadius: 10,
     shadowColor: '#000',
@@ -47,29 +74,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5,
-    alignSelf : 'center',
+    alignSelf: 'center',
+  },
+  logoutButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    padding: 10,
+    backgroundColor: 'red',
+    borderRadius: 5,
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   tex: {
-    fontSize: 20,
-    marginBottom: 20,
-    fontWeight:'bold',
-    marginLeft: 10,
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: 'bold',
   },
-  Button: {
-    backgroundColor: 'black',
-    padding: 10,
-    paddingBottom: 10,
-    marginBottom: 5,
-    borderRadius: 10,
-    width: 250,
-    alignItems: 'center',
-    alignSelf: 'center',
-
-
-   },
-  ButtonText: {
-    color: '#fff',
-    fontSize: 18,
+  playerDetailContainer: {
+    marginBottom: 20,
   },
 });
 

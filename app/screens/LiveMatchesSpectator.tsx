@@ -1,27 +1,15 @@
 import React from 'react';
 import { View, StyleSheet, Text, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-const ScorerSignup = () => {
 
-  
-  const navigation = useNavigation();
+const LiveMatchesSpectator = () => {
 
-
+    
   return (
     <View style={styles.container}>
       <ImageBackground
         source={require('../../assets/images/mainscreen.png')}
         style={styles.background}
       >
-        <TouchableOpacity 
-        style={styles.logoutButton} 
-        onPress={() => navigation.navigate('YouAre' as never)}
-      >
-          <Text
-           style={styles.logoutButtonText}
-          
-          >Logout</Text>
-        </TouchableOpacity>
         <View style={styles.content}>
           {/* Match Card 1 */}
           <View style={styles.scoreCard}>
@@ -89,7 +77,7 @@ const ScorerSignup = () => {
 
               {/* Team 2 Logo and Name */}
               <View style={styles.teamContainer}>
-                <Image style={styles.logo} source={require('../../assets/images/aus.png')} />
+                <Image style={styles.logo} source={require('../../assets/images/england.png')} />
                 <Text style={styles.teamName}>New Zealand</Text>
               </View>
             </View>
@@ -100,21 +88,21 @@ const ScorerSignup = () => {
             <View style={styles.row}>
               {/* Team 1 Logo and Name */}
               <View style={styles.teamContainer}>
-                <Image style={styles.logo} source={require('../../assets/images/eng.png')} />
-                <Text style={styles.teamName}>West Indies</Text>
+                <Image style={styles.logo} source={require('../../assets/images/sa.png')} />
+                <Text style={styles.teamName}>South Africa</Text>
               </View>
               
               {/* Match Details */}
               <View style={styles.matchInfo}>
-                <Text style={styles.inningsText}>WEST INDIES VS SRI LANKA</Text>
+                <Text style={styles.inningsText}>SOUTH AFRICA VS AUSTRALIA</Text>
                 <Text style={styles.statusText}>WI 200/5 (50 ov)</Text>
                 <Text style={styles.requiredText}>Sri Lanka need 201 runs from 50 overs</Text>
               </View>
 
               {/* Team 2 Logo and Name */}
               <View style={styles.teamContainer}>
-                <Image style={styles.logo} source={require('../../assets/images/sa.png')} />
-                <Text style={styles.teamName}>Sri Lanka</Text>
+                <Image style={styles.logo} source={require('../../assets/images/aus.png')} />
+                <Text style={styles.teamName}>Australia</Text>
               </View>
             </View>
           </View>
@@ -206,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScorerSignup;
+export default LiveMatchesSpectator;

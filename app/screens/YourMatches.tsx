@@ -8,7 +8,7 @@ const YourMatches = ({ navigation }: { navigation: NavigationProp<any> }) => {
       <ImageBackground source={require('../../assets/images/mainscreen.png')} style={styles.background}>
           <TouchableOpacity 
             style={styles.Button} 
-            onPress={() => navigation.navigate('MatchDetails' as never)}
+            onPress={() => navigation.navigate('TeamRegistration' as never)}
           >
             <Text style={styles.ButtonText}>Match Room</Text>
           </TouchableOpacity>

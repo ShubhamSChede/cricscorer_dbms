@@ -18,8 +18,32 @@ import ScoreInput from './screens/MatchScoring/ScoreInput';
 import YourMatchesPlayer from './screens/YourMatchesPlayer';
 import LoginPagePlayer from './screens/LoginScreens/LoginPagePlayer';
 import AppTabsBeginningPlayer from './screens/Navigation/AppTabsBeginningPlayer';
+import LiveMatchesSpectator from './screens/LiveMatchesSpectator';
+import TossResult from './screens/MatchScoring/TossResult';
 
-const Stack = createStackNavigator();
+type RootStackParamList = {
+  HomeScreen: undefined;
+  LoginPage: undefined;
+  PlayerSignUp: undefined;
+  ScorerSignUp: undefined;
+  YouAre: undefined;
+  AppTabsBeginning: undefined;
+  AppTabs: undefined;
+  LiveMatches: undefined;
+  LiveMatchesSpectator: undefined;
+  TossResult: undefined;
+  YourMatches: undefined;
+  Profile: undefined;
+  MatchDetails: undefined;
+  TeamRegistration: undefined;
+  SelectPlayer: undefined;
+  ScoreInput: undefined;
+  YourMatchesPlayer: undefined;
+  LoginPagePlayer: undefined;
+  AppTabsBeginningPlayer: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const App = () => {
   return (
@@ -33,6 +57,8 @@ const App = () => {
         <Stack.Screen name="AppTabsBeginning" component={AppTabsBeginning} />
         <Stack.Screen name="AppTabs" component={AppTabs} />
         <Stack.Screen name="LiveMatches" component={LiveMatches} />
+        <Stack.Screen name="LiveMatchesSpectator" component={LiveMatchesSpectator} />
+        <Stack.Screen name="TossResult" component={TossResult} />
         <Stack.Screen name="YourMatches" component={YourMatches} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="MatchDetails" component={MatchDetails} />

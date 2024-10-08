@@ -1,15 +1,16 @@
-import React, { useState} from 'react';
-import { View, TextInput, StyleSheet, Text, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, StyleSheet, Text, ImageBackground, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { NavigationProp } from '@react-navigation/native';
 
 const LoginPage: React.FC<{ navigation: NavigationProp<any> }> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // State to control the loader
 
   const handleLogin = async () => {
+    setLoading(true); // Start the loader when login begins
     try {
-      const response = await fetch('https://cricscorer-backend.onrender.com/api/v1/scorer_auth/scorer_login',   
- {
+      const response = await fetch('https://cricscorer-backend.onrender.com/api/v1/scorer_auth/scorer_login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -18,11 +19,8 @@ const LoginPage: React.FC<{ navigation: NavigationProp<any> }> = ({ navigation }
       });
 
       if (response.ok) {
-        const data = await response.json();   
-
-        console.log('Login successful:', data);   
-
-        // Handle successful login, e.g., store token, navigate
+        const data = await response.json();
+        console.log('Login successful:', data);
         navigation.navigate('AppTabsBeginning');
       } else {
         const errorData = await response.json();
@@ -32,6 +30,8 @@ const LoginPage: React.FC<{ navigation: NavigationProp<any> }> = ({ navigation }
     } catch (error) {
       console.error('Error occurred during login:', error);
       alert('An error occurred during login. Please try again.');
+    } finally {
+      setLoading(false); // Stop the loader once login attempt is completed
     }
   };
 
@@ -59,38 +59,40 @@ const LoginPage: React.FC<{ navigation: NavigationProp<any> }> = ({ navigation }
             onChangeText={setPassword}
             secureTextEntry
           />
-          <TouchableOpacity onPress={handleLogin} style={styles.Button}>
-            <Text style={styles.ButtonText}>Login</Text>
 
-          </TouchableOpacity>
+          {/* Display the loader if loading is true */}
+          {loading ? (
+            <ActivityIndicator size="large" color="black" />
+          ) : (
+            <TouchableOpacity onPress={handleLogin} style={styles.Button}>
+              <Text style={styles.ButtonText}>Login</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </ImageBackground>
-
     </View>
   );
 };
 
-
 const styles = StyleSheet.create({
   background: {
-    flex : 1,
+    flex: 1,
     width: '100%',
     resizeMode: 'contain',
-    justifyContent:'center',
+    justifyContent: 'center',
   },
   container: {
-    flex: 1,                 
-    justifyContent: 'center', 
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    alignContent : 'center' ,
+    alignContent: 'center',
   },
-  tex : {
-      fontSize: 30,
-
+  tex: {
+    fontSize: 30,
   },
   input: {
     height: 40,
-    width : 300,
+    width: 300,
     borderColor: 'grey',
     borderWidth: 1,
     borderRadius: 10,
@@ -98,9 +100,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginBottom: 20,
     paddingHorizontal: 8,
-
   },
-   ButtonText: {
+  ButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
@@ -110,31 +111,28 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     width: '95%',
-
-    
     alignItems: 'center',
     alignSelf: 'center',
-
-   },
-   popupContainer: {
+  },
+  popupContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-},
-popupImage: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  popupImage: {
     width: 400,
     height: 800,
-},
-square: {
-  width: 350,  
-  height: 350, 
-  backgroundColor : 'white',
-  justifyContent: 'center',     
-  alignItems: 'center',  
-  alignSelf: 'center',
-  borderRadius: 20,      
-},
+  },
+  square: {
+    width: 350,
+    height: 350,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 20,
+  },
 });
 
 export default LoginPage;
