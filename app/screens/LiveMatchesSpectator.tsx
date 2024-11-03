@@ -65,7 +65,7 @@ const LiveMatchesSpectator = () => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchLiveMatches();
-  }, []);
+  }, []);  
 
   useEffect(() => {
     fetchLiveMatches();

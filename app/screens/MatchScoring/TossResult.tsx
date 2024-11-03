@@ -109,7 +109,7 @@ const TossResult = () => {
 
                 navigation.navigate('ScoreInput', {
                     battingTeam,
-                    bowlingTeam,
+                    bowlingTeam
                 });
             }
         }

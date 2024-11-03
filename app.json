@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/startpage.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.ssc15.DONEAPP"

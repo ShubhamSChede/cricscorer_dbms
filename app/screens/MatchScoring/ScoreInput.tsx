@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ImageBackground, 
 import { MaterialIcons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 
 type RootStackParamList = {
     ScoreInput: { 
@@ -10,7 +11,8 @@ type RootStackParamList = {
         bowlingTeam: string; 
         isSecondInnings?: boolean; 
         target?: number;
-        battingTeamId?: string; // Add this to store team ID
+        battingTeamId?: string;
+        matchId: string;  // Make this required
     };
 };
 
@@ -23,7 +25,15 @@ interface Props {
 }
 
 const ScoreInput: React.FC<Props> = ({ route, navigation }) => {
-    const { battingTeam, bowlingTeam, isSecondInnings = false, target, battingTeamId } = route.params;
+    console.log("ScoreInput params:", route.params);
+    const { 
+        battingTeam, 
+        bowlingTeam, 
+        isSecondInnings = false, 
+        target, 
+        battingTeamId,
+        matchId
+    } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [runInput, setRunInput] = useState('');
     const [modalType, setModalType] = useState('');
@@ -64,8 +74,10 @@ const ScoreInput: React.FC<Props> = ({ route, navigation }) => {
          // Function to post match result
     const postMatchResult = async (winningTeamId: string): Promise<boolean> => {
         try {
-            console.log("shubham")
-            console.log(winningTeamId);
+            console.log("Posting match result with data:", {
+                winnerId: winningTeamId,
+                matchId: route.params.matchId
+            });
 
             const response = await fetch('https://cricscorer-backend.onrender.com/api/v1/result', {
                 method: 'POST',
@@ -74,17 +86,20 @@ const ScoreInput: React.FC<Props> = ({ route, navigation }) => {
                 },
                 body: JSON.stringify({
                     winnerId: winningTeamId,
+                    matchId: route.params.matchId
                 }),
                 credentials: 'include',
             });
-                console.log(response);
+
+            console.log("Response status:", response.status);
+            const data = await response.json();
+            console.log("Response data:", data);
+
             if (response.ok) {
-                const data = await response.json();
                 console.log('Match result posted successfully:', data);
                 return true;
             } else {
-                const errorData = await response.json();
-                console.error('Failed to post match result:', errorData);
+                console.error('Failed to post match result:', data);
                 Alert.alert('Error', 'Failed to post match result');
                 return false;
             }
@@ -143,6 +158,21 @@ const ScoreInput: React.FC<Props> = ({ route, navigation }) => {
         }
     };
 
+    // Function to handle match completion and navigation
+    const handleMatchCompletion = (winner: string, margin: string) => {
+        setResult(`${winner} won by ${margin}!`);
+        
+        // Navigate to AppTabsBeginning after 10 seconds
+        setTimeout(() => {
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'AppTabsBeginning' }],
+                })
+            );
+        }, 10000);
+    };
+
     // Function to handle the PATCH request and update the score
     const updateScoreOnServer = async (runs: number, wicketsChange: number, updateBalls: boolean) => {
         try {
@@ -160,9 +190,20 @@ const ScoreInput: React.FC<Props> = ({ route, navigation }) => {
             const result = await response.json();
 
             if (response.ok) {
-                // Successfully updated score, now update the local state
-                setTotalScore((prevScore) => prevScore + runs);
+                const newTotalScore = totalScore + runs;
+                setTotalScore(newTotalScore);
                 setWickets((prevWickets) => Math.min(prevWickets + wicketsChange, 10));
+
+                // Check if target has been reached in second innings
+                if (isSecondInnings && target && newTotalScore >= target) {
+                    setIsInningsEnded(true);
+                    const winningTeamId = await fetchTeamId(battingTeam);
+                    if (winningTeamId) {
+                        await postMatchResult(winningTeamId);
+                        handleMatchCompletion(battingTeam, `${10 - wickets} wickets`);
+                    }
+                    return;
+                }
 
                 // Update balls and overs only if updateBalls is true
                 if (updateBalls) {
@@ -230,24 +271,30 @@ const ScoreInput: React.FC<Props> = ({ route, navigation }) => {
                 ? `${10 - wickets} wickets` 
                 : `${target! - totalScore} runs`;
             
+            console.log("Match ended with:", {
+                winner,
+                margin,
+                matchId: route.params.matchId
+            });
+
             // Get winner's team ID
             const winningTeamId = await fetchTeamId(winner);
+            console.log("Winner team ID:", winningTeamId);
             
             if (winningTeamId) {
                 // Post the match result
                 const resultPosted = await postMatchResult(winningTeamId);
+                console.log("Result posted:", resultPosted);
                 
                 if (resultPosted) {
-                    setResult(`${winner} won by ${margin}!`);
-                    // You might want to navigate to a match summary screen here
-                    // navigation.navigate('MatchSummary', { result: `${winner} won by ${margin}!` });
+                    handleMatchCompletion(winner, margin);
                 } else {
                     Alert.alert('Warning', 'Match ended but failed to save result');
-                    setResult(`${winner} won by ${margin}!`);
+                    handleMatchCompletion(winner, margin);
                 }
             } else {
                 Alert.alert('Warning', 'Match ended but failed to save result');
-                setResult(`${winner} won by ${margin}!`);
+                handleMatchCompletion(winner, margin);
             }
         } else {
             // First innings ended
@@ -267,7 +314,8 @@ const ScoreInput: React.FC<Props> = ({ route, navigation }) => {
                         bowlingTeam: battingTeam,
                         isSecondInnings: true,
                         target: newTarget,
-                        battingTeamId: secondInningsTeamId
+                        battingTeamId: secondInningsTeamId,
+                        matchId: route.params.matchId
                     });
                 } else {
                     Alert.alert('Error', 'Failed to start second innings');
