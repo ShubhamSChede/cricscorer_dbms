@@ -19,12 +19,6 @@ function YouAre(){
         >
           <Text style={styles.ButtonText}>Scorer</Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.Button} 
-          onPress={() => navigation.navigate('PlayerSignUp' as never)}
-        >
-          <Text style={styles.ButtonText}>Player</Text>
-        </TouchableOpacity>
       </View>
      
       </ImageBackground>
@@ -47,7 +41,7 @@ const styles = StyleSheet.create({
       },
   square: {
     width: 300,
-    height: 300,
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',

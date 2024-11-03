@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert, ActivityIndicator } from 'react-native';
 import { NavigationProp } from '@react-navigation/native';
 
 const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) => {
@@ -9,6 +9,7 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
     const [teamName2, setTeamName2] = useState('');
     const [teamId2, setTeamId2] = useState('');
     const [teamPassword2, setTeamPassword2] = useState('');
+    const [loading, setLoading] = useState(false); // State for loading
 
     const handleRegisterTeams = async () => {
         // Prepare data for Team 1 and Team 2
@@ -17,13 +18,15 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
             roomId: teamId1,
             roompassword: teamPassword1,
         };
-        
+
         const team2 = {
             name: teamName2,
             roomId: teamId2,
             roompassword: teamPassword2,
         };
-    
+
+        setLoading(true); // Start loading
+
         try {
             // Send Team 1 data to backend
             const response1 = await fetch('https://cricscorer-backend.onrender.com/api/v1/teams', {
@@ -33,13 +36,13 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
                 },
                 body: JSON.stringify(team1),
             });
-    
+
             // Check if the request was successful for Team 1
             if (!response1.ok) {
                 const errorText = await response1.text();
                 throw new Error(`Failed to register Team 1: ${errorText}`);
             }
-    
+
             // Send Team 2 data to backend
             const response2 = await fetch('https://cricscorer-backend.onrender.com/api/v1/teams', {
                 method: 'POST',
@@ -48,13 +51,13 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
                 },
                 body: JSON.stringify(team2),
             });
-    
+
             // Check if the request was successful for Team 2
             if (!response2.ok) {
                 const errorText = await response2.text();
                 throw new Error(`Failed to register Team 2: ${errorText}`);
             }
-    
+
             // If successful, navigate to MatchDetails
             Alert.alert('Success', 'Teams registered successfully');
             navigation.navigate('MatchDetails', {
@@ -63,60 +66,69 @@ const TeamRegistration = ({ navigation }: { navigation: NavigationProp<any> }) =
             });
         } catch (error) {
             Alert.alert('Error', (error as Error).message);
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
-  
+
     return (
         <View style={styles.container}>
             <ImageBackground source={require('../../../assets/images/mainscreen.png')} style={styles.background}>
                 <View style={styles.square}>
                     <Text style={styles.title}>Register Teams</Text>
-                    
-                    {/* Team 1 Inputs */}
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Team 1 Name"
-                        value={teamName1}
-                        onChangeText={setTeamName1}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Team 1 ID"
-                        value={teamId1}
-                        onChangeText={setTeamId1}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Team 1 Password"
-                        value={teamPassword1}
-                        secureTextEntry={true}
-                        onChangeText={setTeamPassword1}
-                    />
-                    
-                    {/* Team 2 Inputs */}
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Team 2 Name"
-                        value={teamName2}
-                        onChangeText={setTeamName2}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Team 2 ID"
-                        value={teamId2}
-                        onChangeText={setTeamId2}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Team 2 Password"
-                        value={teamPassword2}
-                        secureTextEntry={true}
-                        onChangeText={setTeamPassword2}
-                    />
-                    
-                    <TouchableOpacity style={styles.registerButton} onPress={handleRegisterTeams}>
-                        <Text style={styles.registerButtonText}>Register Teams</Text>
-                    </TouchableOpacity>
+
+                    {/* Show ActivityIndicator when loading */}
+                    {loading ? (
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    ) : (
+                        <>
+                            {/* Team 1 Inputs */}
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Team 1 Name"
+                                value={teamName1}
+                                onChangeText={setTeamName1}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Team 1 ID"
+                                value={teamId1}
+                                onChangeText={setTeamId1}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Team 1 Password"
+                                value={teamPassword1}
+                                secureTextEntry={true}
+                                onChangeText={setTeamPassword1}
+                            />
+
+                            {/* Team 2 Inputs */}
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Team 2 Name"
+                                value={teamName2}
+                                onChangeText={setTeamName2}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Team 2 ID"
+                                value={teamId2}
+                                onChangeText={setTeamId2}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Team 2 Password"
+                                value={teamPassword2}
+                                secureTextEntry={true}
+                                onChangeText={setTeamPassword2}
+                            />
+
+                            <TouchableOpacity style={styles.registerButton} onPress={handleRegisterTeams}>
+                                <Text style={styles.registerButtonText}>Register Teams</Text>
+                            </TouchableOpacity>
+                        </>
+                    )}
                 </View>
             </ImageBackground>
         </View>

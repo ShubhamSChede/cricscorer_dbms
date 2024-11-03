@@ -3,9 +3,7 @@ import { View, StyleSheet, Text, ImageBackground, Image, TouchableOpacity, Alert
 import { useNavigation } from '@react-navigation/native';
 const ScorerSignup = () => {
 
-  
   const navigation = useNavigation();
-
 
   return (
     <View style={styles.container}>

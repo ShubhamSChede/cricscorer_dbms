@@ -1,14 +1,116 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ImageBackground, Modal, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, ImageBackground, Modal, TextInput, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
-const ScoreInput = () => {
+type RootStackParamList = {
+    ScoreInput: { 
+        battingTeam: string; 
+        bowlingTeam: string; 
+        isSecondInnings?: boolean; 
+        target?: number;
+        battingTeamId?: string; // Add this to store team ID
+    };
+};
+
+type ScoreInputNavigationProp = StackNavigationProp<RootStackParamList, 'ScoreInput'>;
+type ScoreInputRouteProp = RouteProp<RootStackParamList, 'ScoreInput'>;
+
+interface Props {
+    navigation: ScoreInputNavigationProp;
+    route: ScoreInputRouteProp;
+}
+
+const ScoreInput: React.FC<Props> = ({ route, navigation }) => {
+    const { battingTeam, bowlingTeam, isSecondInnings = false, target, battingTeamId } = route.params;
     const [modalVisible, setModalVisible] = useState(false);
     const [runInput, setRunInput] = useState('');
     const [modalType, setModalType] = useState('');
     const [dismissalType, setDismissalType] = useState('');
+    const [totalScore, setTotalScore] = useState(0);
+    const [wickets, setWickets] = useState(0);
+    const [overs, setOvers] = useState(0);
+    const [balls, setBalls] = useState(0);
+    const [isInningsEnded, setIsInningsEnded] = useState(false);
+    const [result, setResult] = useState('');
+    const MAX_OVERS = 2;
 
-    const openModal = (type) => {
+      // Function to fetch teamId based on team name
+      const fetchTeamId = async (teamName: string): Promise<string | null> => {
+        try {
+            const response = await fetch('https://cricscorer-backend.onrender.com/api/v1/team', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ roomId: teamName })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                return data.team.id;
+            } else {
+                Alert.alert('Error', 'Failed to fetch team ID');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching team ID:', error);
+            Alert.alert('Error', 'Failed to fetch team ID');
+            return null;
+        }
+    };
+
+         // Function to post match result
+    const postMatchResult = async (winningTeamId: string): Promise<boolean> => {
+        try {
+            console.log("shubham")
+            console.log(winningTeamId);
+
+            const response = await fetch('https://cricscorer-backend.onrender.com/api/v1/result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    winnerId: winningTeamId,
+                }),
+                credentials: 'include',
+            });
+                console.log(response);
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Match result posted successfully:', data);
+                return true;
+            } else {
+                const errorData = await response.json();
+                console.error('Failed to post match result:', errorData);
+                Alert.alert('Error', 'Failed to post match result');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error posting match result:', error);
+            Alert.alert('Error', 'Failed to post match result');
+            return false;
+        }
+    };
+
+    useEffect(() => {
+        if (overs >= MAX_OVERS || wickets >= 10) {
+            endInnings();
+        }
+    }, [overs, wickets]);
+
+    useEffect(() => {
+        setTotalScore(0);
+        setWickets(0);
+        setOvers(0);
+        setBalls(0);
+        setIsInningsEnded(false);
+        setResult('');
+    }, [battingTeam, bowlingTeam]);
+
+    const openModal = (type: string) => {
         setModalType(type);
         setModalVisible(true);
     };
@@ -19,19 +121,164 @@ const ScoreInput = () => {
         setModalVisible(false);
     };
 
-    const handleRunInput = () => {
-        // Handle the run input based on the modalType (WD, NB, BYE, LB)
-        console.log(`${modalType} with ${runInput} runs`);
+    const handleRunInput = async () => {
+        const runs = parseInt(runInput);
+        if (!isNaN(runs)) {
+            if (modalType === 'WD' || modalType === 'NB') {
+                await updateScoreOnServer(runs + 1, 0, false);
+            } else {
+                await updateScoreOnServer(runs, 0, true);
+            }
+        }
         closeModal();
     };
 
-    const handleDismissal = (type) => {
-        // Handle the dismissal logic based on dismissalType
-        console.log(`Player is out by ${type}`);
-        closeModal();
+    const handleDismissal = async (type: string) => {
+        if (type === 'Run Out') {
+            openModal('RUN_OUT');
+        } else {
+            console.log(`Player is out by ${type}`);
+            await updateScoreOnServer(0, 1, true);
+            closeModal();
+        }
     };
 
-    const renderScoreButton = (value, onPress = () => {}) => (
+    // Function to handle the PATCH request and update the score
+    const updateScoreOnServer = async (runs: number, wicketsChange: number, updateBalls: boolean) => {
+        try {
+            const response = await fetch('https://cricscorer-backend.onrender.com/api/v1/scorecard', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    runs: runs,
+                    wickets: wicketsChange,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Successfully updated score, now update the local state
+                setTotalScore((prevScore) => prevScore + runs);
+                setWickets((prevWickets) => Math.min(prevWickets + wicketsChange, 10));
+
+                // Update balls and overs only if updateBalls is true
+                if (updateBalls) {
+                    setBalls((prevBalls) => {
+                        const newBalls = prevBalls + 1;
+                        if (newBalls === 6) {
+                            // Reset balls and increment overs
+                            setOvers((prevOvers) => prevOvers + 1);
+                            return 0;
+                        }
+                        return newBalls;
+                    });
+                }
+                
+                // Check if innings should end
+                if (overs >= MAX_OVERS || wickets >= 10) {
+                    endInnings();
+                }
+            } else {
+                Alert.alert('Error', result.message || 'Failed to update score');
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'Something went wrong while updating the score');
+        }
+    };
+    
+   
+    // Function to create new innings
+    const createNewInnings = async (teamId: string): Promise<boolean> => {
+        try {
+            const response = await fetch('https://cricscorer-backend.onrender.com/api/v1/innings/create_innings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    inningsNumber: 2,
+                    inningsType: 'Bat',
+                    teamid_tosswon: teamId
+                }),
+            });
+
+            if (response.ok) {
+                return true;
+            } else {
+                Alert.alert('Error', 'Failed to create new innings');
+                return false;
+            }
+        } catch (error) {
+            console.error('Error creating new innings:', error);
+            Alert.alert('Error', 'Failed to create new innings');
+            return false;
+        }
+    };
+
+    const endInnings = async () => {
+        setIsInningsEnded(true);
+        
+        if (isSecondInnings) {
+            // Match has ended
+            const targetReached = totalScore >= target!;
+            const winner = targetReached ? battingTeam : bowlingTeam;
+            const margin = targetReached 
+                ? `${10 - wickets} wickets` 
+                : `${target! - totalScore} runs`;
+            
+            // Get winner's team ID
+            const winningTeamId = await fetchTeamId(winner);
+            
+            if (winningTeamId) {
+                // Post the match result
+                const resultPosted = await postMatchResult(winningTeamId);
+                
+                if (resultPosted) {
+                    setResult(`${winner} won by ${margin}!`);
+                    // You might want to navigate to a match summary screen here
+                    // navigation.navigate('MatchSummary', { result: `${winner} won by ${margin}!` });
+                } else {
+                    Alert.alert('Warning', 'Match ended but failed to save result');
+                    setResult(`${winner} won by ${margin}!`);
+                }
+            } else {
+                Alert.alert('Warning', 'Match ended but failed to save result');
+                setResult(`${winner} won by ${margin}!`);
+            }
+        } else {
+            // First innings ended
+            const newTarget = totalScore + 1;
+            
+            // Fetch team ID for the team that will bat in second innings
+            const secondInningsTeamId = await fetchTeamId(bowlingTeam);
+            
+            if (secondInningsTeamId) {
+                // Create new innings for second batting team
+                const inningsCreated = await createNewInnings(secondInningsTeamId);
+                
+                if (inningsCreated) {
+                    // Navigate to ScoreInput for second innings
+                    navigation.navigate('ScoreInput', {
+                        battingTeam: bowlingTeam,
+                        bowlingTeam: battingTeam,
+                        isSecondInnings: true,
+                        target: newTarget,
+                        battingTeamId: secondInningsTeamId
+                    });
+                } else {
+                    Alert.alert('Error', 'Failed to start second innings');
+                }
+            } else {
+                Alert.alert('Error', 'Failed to get team information for second innings');
+            }
+        }
+    };
+
+    const renderScoreButton = (value: string | number, onPress = () => {}) => (
         <TouchableOpacity style={styles.scoreButton} onPress={onPress}>
             <Text style={styles.buttonText}>{value}</Text>
         </TouchableOpacity>
@@ -42,39 +289,29 @@ const ScoreInput = () => {
             source={require('../../../assets/images/mainscreen.png')}
             style={styles.container}
         >
-                <View style={styles.square}>
-                    <Text style={styles.teamName}>The Hotshots</Text>
-                    <Text style={styles.score}>100/2 (12.4/20)</Text>
-                    <Text style={styles.projectedScore}>CRR: 7.89 Projected Score: 158</Text>
-                </View>
-                <View style={styles.batsmanInfo}>
-                    <Text style={styles.batsman}>
-                        <MaterialIcons name="sports-cricket" size={16} color="black" /> Kunal  20(14)
-                    </Text>
-                    <Text style={styles.batsman}>
-                        <MaterialIcons name="sports-cricket" size={16} color="black" /> Deep  7(3)
-                    </Text>
-                </View>
-
-                <View style={styles.bowlerInfo}>
-                    <Text style={styles.bowler}>Vishnu Chunara</Text>
-                    <Text style={styles.bowlerStats}>3.2-20-2</Text>
-                </View>
-
+            <View style={styles.square}>
+                <Text style={styles.teamName}>{battingTeam}</Text>
+                <Text style={styles.score}>{totalScore}/{wickets} ({overs}.{balls}/{MAX_OVERS})</Text>
+                <Text style={styles.projectedScore}>
+                    CRR: {((totalScore / (overs + balls / 6)) || 0).toFixed(2)} 
+                    Projected Score: {Math.round(totalScore * (MAX_OVERS / (overs + balls / 6)) || 0)}
+                </Text>
+                <Text style={styles.bowlingTeam}>Bowling: {bowlingTeam}</Text>
+                {isSecondInnings && <Text style={styles.target}>Target: {target}</Text>}
+                {isInningsEnded && <Text style={styles.result}>{result}</Text>}
+            </View>
+            
             <View style={styles.keypadContainer}>
                 <View style={styles.scoreButtons}>
-                    {renderScoreButton(0)}
-                    {renderScoreButton(1)}
-                    {renderScoreButton(2)}
-                    {renderScoreButton(3)}
+                    {renderScoreButton(0, () => updateScoreOnServer(0, 0, true))}
+                    {renderScoreButton(1, () => updateScoreOnServer(1, 0, true))}
+                    {renderScoreButton(2, () => updateScoreOnServer(2, 0, true))}
+                    {renderScoreButton(3, () => updateScoreOnServer(3, 0, true))}
                 </View>
                 <View style={styles.lowerButtons}>
-                    {renderScoreButton(4)}
-                    {renderScoreButton(5)}
-                    {renderScoreButton(6)}
-                    <TouchableOpacity style={styles.undoButton}>
-                        <Text style={styles.buttonText}>UNDO</Text>
-                    </TouchableOpacity>
+                    {renderScoreButton(4, () => updateScoreOnServer(4, 0, true))}
+                    {renderScoreButton(5, () => updateScoreOnServer(5, 0, true))}
+                    {renderScoreButton(6, () => updateScoreOnServer(6, 0, true))}
                 </View>
                 <View style={styles.lowerButtons}>
                     {renderScoreButton('WD', () => openModal('WD'))}
@@ -89,6 +326,7 @@ const ScoreInput = () => {
                 </View>
             </View>
 
+            {/* Modal for Dismissals and Run Inputs */}
             <Modal
                 transparent={true}
                 animationType="slide"
@@ -107,18 +345,34 @@ const ScoreInput = () => {
                                     {renderScoreButton('LBW', () => handleDismissal('LBW'))}
                                     {renderScoreButton('Stumped', () => handleDismissal('Stumped'))}
                                     {renderScoreButton('Hit Wicket', () => handleDismissal('Hit Wicket'))}
-                                    {renderScoreButton('Timed out', () => handleDismissal('Bowled'))}
-                                    {renderScoreButton('Handle the ball', () => handleDismissal('Caught'))}
-                                    {renderScoreButton('Obstructing field', () => handleDismissal('Run Out'))}
-                                    {renderScoreButton('Retired out', () => handleDismissal('LBW'))}
                                 </View>
+                                <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
+                                    <Text style={styles.buttonText}>Cancel</Text>
+                                </TouchableOpacity>
+                            </>
+                        ) : modalType === 'RUN_OUT' ? (
+                            <>
+                                <Text style={styles.modalTitle}>Enter Runs Scored Before Run Out</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter runs"
+                                    keyboardType="numeric"
+                                    value={runInput}
+                                    onChangeText={setRunInput}
+                                />
+                                <TouchableOpacity style={styles.modalButton} onPress={async () => {
+                                    const runs = parseInt(runInput);
+                                    await handleRunInput();
+                                }}>
+                                    <Text style={styles.buttonText}>Submit</Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
                                     <Text style={styles.buttonText}>Cancel</Text>
                                 </TouchableOpacity>
                             </>
                         ) : (
                             <>
-                                <Text style={styles.modalTitle}>Enter Runs for {modalType}</Text>
+                                <Text style={styles.modalTitle}>Enter Runs</Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Enter runs"
@@ -127,7 +381,10 @@ const ScoreInput = () => {
                                     onChangeText={setRunInput}
                                 />
                                 <TouchableOpacity style={styles.modalButton} onPress={handleRunInput}>
-                                    <Text style={styles.buttonText}>OK</Text>
+                                    <Text style={styles.buttonText}>Submit</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
+                                    <Text style={styles.buttonText}>Cancel</Text>
                                 </TouchableOpacity>
                             </>
                         )}
@@ -137,6 +394,7 @@ const ScoreInput = () => {
         </ImageBackground>
     );
 };
+
 const styles = StyleSheet.create({
         container: {
             flex: 1,
@@ -150,11 +408,10 @@ const styles = StyleSheet.create({
             flexGrow: 1,
             justifyContent: 'flex-start',
         },
-        teamName: {
+        teamNameBlack: {
             fontSize: 32,
             color: 'black',
             marginBottom: 5,
-            //bold
             fontWeight: 'bold',
             textAlign: 'center',
         },
@@ -169,19 +426,6 @@ const styles = StyleSheet.create({
             color: '#ccc',
             marginTop: 5,
             textAlign: 'center',
-        },
-        batsmanInfo: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 10,
-            backgroundColor: 'white',
-            height: 60,
-            marginHorizontal: 20,
-            borderRadius: 10,
-        },
-        batsman: {
-            fontSize: 20,
-            fontWeight: 'bold',
         },
         square: {
             width: 350,
@@ -198,26 +442,24 @@ const styles = StyleSheet.create({
             alignSelf : 'center',
             margin: 25,
           },
-        bowlerInfo: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            padding: 10,
-            backgroundColor: 'white',
-            height: 60,
-            marginHorizontal: 20,
-            margin: 10,
-            borderRadius: 10,
+          teamName: {
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: 'black',
+            marginBottom: 10,
         },
-        bowler: {
+        target: {
             fontSize: 18,
             fontWeight: 'bold',
+            marginTop: 10,
         },
-        bowlerStats: {
+        bowlingTeam: {
             fontSize: 18,
-            fontWeight: 'bold',  
+            color: 'black',
+            marginTop: 10,
         },
         keypadContainer: {
-            borderTopWidth: 5,
+            //borderTopWidth: 5,
             //borderColor: '#ddd',
             //padding: 3,
             height: 250,
@@ -243,8 +485,9 @@ const styles = StyleSheet.create({
             borderRadius: 10,
             flex: 1,
             alignItems: 'center',
-            margin: 5,
+            margin: 10,
             width: 300,
+            height: 65,
         },
         undoButton: {
             backgroundColor: 'black',
@@ -259,11 +502,19 @@ const styles = StyleSheet.create({
             padding: 15,
             alignItems: 'center',
             flex: 1,
+            marginHorizontal: 10,
+            marginBottom: 50,
         },
         buttonText: {
-            fontSize: 15,
+            fontSize: 20,
             color: '#fff',
         },
+    result: {
+        fontSize: 18,
+        color: 'black',
+        marginTop: 10,
+        textAlign: 'center',
+    },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
@@ -271,9 +522,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        width: '80%', // Adjust width as needed
+        width: '80%',
         backgroundColor: 'white',
-        borderRadius: 20, // Rounded corners
+        borderRadius: 20, 
         padding: 20,
         alignItems: 'center',
         shadowColor: '#000',

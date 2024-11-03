@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from '../Profile';
-import LiveMatches from '../LiveMatches';
+import LiveMatchesSpectator from '../LiveMatchesSpectator';
 import YourMatches from '../YourMatches';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -11,8 +11,8 @@ function AppTabsBeginning() {
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }} >
             <Tab.Screen 
-                name="LiveMatches"  
-                component={LiveMatches}
+                name="LiveMatchesSpectator"  
+                component={LiveMatchesSpectator}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <FontAwesome5 name="edit" color={color} size={size} />
@@ -22,15 +22,6 @@ function AppTabsBeginning() {
             <Tab.Screen 
                 name="YourMatches" 
                 component={YourMatches}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <FontAwesome5 name="list-alt" color={color} size={size} />
-                    ),
-                }}
-            />
-             <Tab.Screen 
-                name="Profile" 
-                component={Profile}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <FontAwesome5 name="list-alt" color={color} size={size} />
